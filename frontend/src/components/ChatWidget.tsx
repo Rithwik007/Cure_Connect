@@ -5,7 +5,13 @@ import { io } from 'socket.io-client';
 import { useAuth } from '../hooks/useAuth';
 import api from '../api';
 
-const socket = io(import.meta.env.VITE_API_URL || 'http://localhost:3001');
+const getSocketURL = () => {
+  let url = import.meta.env.VITE_API_URL || import.meta.env.VITE_API_BASE_URL || 'http://localhost:3001';
+  // Remove /api or /api/ from the end for socket connection
+  return url.replace(/\/api\/?$/, '');
+};
+
+const socket = io(getSocketURL());
 
 interface ChatWidgetProps {
   roomId: string;
@@ -37,6 +43,14 @@ const ChatWidget: React.FC<ChatWidgetProps> = ({ roomId, recipientName }) => {
       socket.emit('join_room', roomId);
     }
 
+    socket.on('connect', () => {
+      console.log('Socket connected successfully');
+    });
+
+    socket.on('connect_error', (err) => {
+      console.error('Socket connection error:', err);
+    });
+
     socket.on('receive_message', (data) => {
       setMessages((prev) => [...prev, data]);
       if (!isOpen) setHasNewMessage(true);
@@ -44,6 +58,8 @@ const ChatWidget: React.FC<ChatWidgetProps> = ({ roomId, recipientName }) => {
 
     return () => {
       socket.off('receive_message');
+      socket.off('connect');
+      socket.off('connect_error');
     };
   }, [roomId, isOpen]);
 
@@ -63,7 +79,14 @@ const ChatWidget: React.FC<ChatWidgetProps> = ({ roomId, recipientName }) => {
       time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
     };
 
+    // Send via socket for real-time delivery
     socket.emit('send_message', messageData);
+    
+    // Also save via REST API for reliability
+    api.post('/messages', messageData).catch(err => {
+      console.error('Failed to save message via REST', err);
+    });
+
     setMessages((prev) => [...prev, messageData]);
     setMessage('');
   };
