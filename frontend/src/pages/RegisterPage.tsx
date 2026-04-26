@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Form, Button, Row, Col, Alert, Card, Container, ButtonGroup, ToggleButton } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import api from '../api';
 import { useAuth } from '../hooks/useAuth';
 import { Activity, Mail, Lock, UserPlus, User, Phone, Calendar } from 'lucide-react';
 
@@ -60,10 +60,9 @@ const RegisterPage: React.FC = () => {
         ...(role === 'patient' ? { age: parseInt(age), gender, phone } : {})
       };
 
-      const { data } = await axios.post(
-        `${import.meta.env.VITE_API_BASE_URL || 'http://localhost:3001'}/api/auth/register`,
-        payload,
-        config
+      const { data } = await api.post(
+        '/auth/register',
+        payload
       );
 
       login({ 

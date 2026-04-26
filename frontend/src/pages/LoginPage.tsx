@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Form, Button, Row, Col, Alert, Card, Container } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import api from '../api';
 import { useAuth } from '../hooks/useAuth';
 import { Activity, Mail, Lock, LogIn } from 'lucide-react';
 
@@ -28,10 +28,9 @@ const LoginPage: React.FC = () => {
         },
       };
 
-      const { data } = await axios.post(
-        `${import.meta.env.VITE_API_BASE_URL || 'http://localhost:3001'}/api/auth/login`,
-        { email, password },
-        config
+      const { data } = await api.post(
+        '/auth/login',
+        { email, password }
       );
 
       login({ _id: data._id, name: data.name, email: data.email, role: data.role }, data.token);
