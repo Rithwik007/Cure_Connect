@@ -9,7 +9,6 @@ const router = Router();
 
 // Routes needing protection
 router.delete('/account', protect);
-router.post('/danger-reset-all', protect);
 
 const generateToken = (id: string) => {
   return jwt.sign({ id }, config.jwtSecret, {
@@ -124,20 +123,6 @@ router.delete('/account', async (req: Request, res: Response) => {
   }
 });
 
-// Danger Reset Route (Temporary)
-router.post('/danger-reset-all', async (req: Request, res: Response) => {
-  try {
-    const collections = ['users', 'patients', 'visits', 'appointments', 'vitals', 'reminders', 'messages', 'documents'];
-    const db = mongoose.connection.db;
-    
-    for (const name of collections) {
-      await db.collection(name).deleteMany({});
-    }
-    
-    res.json({ message: 'System reset successful. All data cleared.' });
-  } catch (error: any) {
-    res.status(500).json({ message: error.message });
-  }
-});
+
 
 export default router;

@@ -58,21 +58,6 @@ const DashboardPage: React.FC = () => {
         <h2 className="fw-bold mb-1 fs-1" style={{ letterSpacing: '-0.03em' }}>Clinical Overview</h2>
         <div className="d-flex justify-content-between align-items-center">
           <p className="text-muted fs-5 mb-0">Welcome back, Dr. {user?.name}</p>
-          <Button 
-            variant="outline-danger" 
-            size="sm" 
-            className="rounded-pill px-3"
-            onClick={async () => {
-              if(window.confirm('WARNING: This will delete ALL users, patients, and medical records. You will be logged out and need to register again. Proceed?')) {
-                try {
-                  await api.post('/auth/danger-reset-all');
-                  window.location.href = '/register';
-                } catch(e) { alert('Reset failed'); }
-              }
-            }}
-          >
-            Reset All Data (Danger)
-          </Button>
         </div>
       </div>
       
