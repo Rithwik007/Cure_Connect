@@ -1,7 +1,7 @@
 import mongoose, { Schema, Document } from 'mongoose';
 
 export interface IReport extends Document {
-  _id: string;
+  _id: any;
   visitId: string;
   doctorId: string;
   fileName: string;
