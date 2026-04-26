@@ -3,7 +3,7 @@ import { Form, Button, Row, Col, Alert, Card, Container, ButtonGroup, ToggleButt
 import { Link, useNavigate } from 'react-router-dom';
 import api from '../api';
 import { useAuth } from '../hooks/useAuth';
-import { Activity, Mail, Lock, UserPlus, User, Phone, Calendar } from 'lucide-react';
+import { Activity, Mail, Lock, UserPlus, User, Phone, Calendar, Eye, EyeOff } from 'lucide-react';
 
 const RegisterPage: React.FC = () => {
   const [name, setName] = useState('');
@@ -11,6 +11,7 @@ const RegisterPage: React.FC = () => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [role, setRole] = useState<'doctor' | 'patient'>('patient');
+  const [showPassword, setShowPassword] = useState(false);
   
   // New Patient-specific fields
   const [age, setAge] = useState('');
@@ -165,12 +166,20 @@ const RegisterPage: React.FC = () => {
                         <div className="position-relative">
                           <Lock size={18} className="position-absolute top-50 translate-middle-y ms-3 text-muted" />
                           <Form.Control
-                            type="password"
+                            type={showPassword ? "text" : "password"}
                             placeholder="••••••••"
                             className="ps-5 py-2 border-light bg-light"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                           />
+                          <Button 
+                            variant="link" 
+                            className="position-absolute top-50 translate-middle-y end-0 me-2 text-muted p-0 text-decoration-none"
+                            onClick={() => setShowPassword(!showPassword)}
+                            type="button"
+                          >
+                            {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                          </Button>
                         </div>
                       </Form.Group>
 
@@ -179,12 +188,20 @@ const RegisterPage: React.FC = () => {
                         <div className="position-relative">
                           <Lock size={18} className="position-absolute top-50 translate-middle-y ms-3 text-muted" />
                           <Form.Control
-                            type="password"
+                            type={showPassword ? "text" : "password"}
                             placeholder="••••••••"
                             className="ps-5 py-2 border-light bg-light"
                             value={confirmPassword}
                             onChange={(e) => setConfirmPassword(e.target.value)}
                           />
+                          <Button 
+                            variant="link" 
+                            className="position-absolute top-50 translate-middle-y end-0 me-2 text-muted p-0 text-decoration-none"
+                            onClick={() => setShowPassword(!showPassword)}
+                            type="button"
+                          >
+                            {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                          </Button>
                         </div>
                       </Form.Group>
                     </Col>

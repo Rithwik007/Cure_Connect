@@ -3,7 +3,7 @@ import { Form, Button, Row, Col, Alert, Card, Container } from 'react-bootstrap'
 import { Link, useNavigate } from 'react-router-dom';
 import api from '../api';
 import { useAuth } from '../hooks/useAuth';
-import { Activity, Mail, Lock, LogIn } from 'lucide-react';
+import { Activity, Mail, Lock, LogIn, Eye, EyeOff } from 'lucide-react';
 
 const LoginPage: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -11,6 +11,7 @@ const LoginPage: React.FC = () => {
   const [error, setError] = useState('');
   const navigate = useNavigate();
   const { login } = useAuth();
+  const [showPassword, setShowPassword] = useState(false);
 
   const submitHandler = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -60,7 +61,7 @@ const LoginPage: React.FC = () => {
                       <Mail size={18} className="position-absolute top-50 translate-middle-y ms-3 text-muted" />
                       <Form.Control
                         type="email"
-                        placeholder="doctor@example.com"
+                        placeholder="Enter your email"
                         className="ps-5 py-2 border-light bg-light"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
@@ -73,12 +74,20 @@ const LoginPage: React.FC = () => {
                     <div className="position-relative">
                       <Lock size={18} className="position-absolute top-50 translate-middle-y ms-3 text-muted" />
                       <Form.Control
-                        type="password"
+                        type={showPassword ? "text" : "password"}
                         placeholder="••••••••"
                         className="ps-5 py-2 border-light bg-light"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                       />
+                      <Button 
+                        variant="link" 
+                        className="position-absolute top-50 translate-middle-y end-0 me-2 text-muted p-0 text-decoration-none"
+                        onClick={() => setShowPassword(!showPassword)}
+                        type="button"
+                      >
+                        {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                      </Button>
                     </div>
                   </Form.Group>
 
