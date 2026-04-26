@@ -21,10 +21,10 @@ const DashboardPage: React.FC = () => {
         api.get('/appointments')
       ]);
       setStats({
-        patients: patientsRes.data.data.length,
-        visits: visitsRes.data.data.length
+        patients: patientsRes.data.data?.length || 0,
+        visits: visitsRes.data.data?.length || 0
       });
-      setAppointments(appRes.data.filter((a: any) => a.status === 'pending'));
+      setAppointments(Array.isArray(appRes.data) ? appRes.data.filter((a: any) => a.status === 'pending') : []);
     } catch (err) {
       console.error('Failed to fetch stats', err);
     } finally {
@@ -56,7 +56,24 @@ const DashboardPage: React.FC = () => {
     <div>
       <div className="mb-5">
         <h2 className="fw-bold mb-1 fs-1" style={{ letterSpacing: '-0.03em' }}>Clinical Overview</h2>
-        <p className="text-muted fs-5">Welcome back, Dr. {user?.name}</p>
+        <div className="d-flex justify-content-between align-items-center">
+          <p className="text-muted fs-5 mb-0">Welcome back, Dr. {user?.name}</p>
+          <Button 
+            variant="outline-danger" 
+            size="sm" 
+            className="rounded-pill px-3"
+            onClick={async () => {
+              if(window.confirm('WARNING: This will delete ALL users, patients, and medical records. You will be logged out and need to register again. Proceed?')) {
+                try {
+                  await api.post('/auth/danger-reset-all');
+                  window.location.href = '/register';
+                } catch(e) { alert('Reset failed'); }
+              }
+            }}
+          >
+            Reset All Data (Danger)
+          </Button>
+        </div>
       </div>
       
       {error && <Alert variant="danger" className="border-0 shadow-sm" dismissible onClose={() => setError('')}>{error}</Alert>}

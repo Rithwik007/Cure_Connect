@@ -1,9 +1,15 @@
 import { Router, Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
+import mongoose from 'mongoose';
 import User from '../models/User';
 import { config } from '../config';
+import { protect } from '../middleware/auth';
 
 const router = Router();
+
+// Routes needing protection
+router.delete('/account', protect);
+router.post('/danger-reset-all', protect);
 
 const generateToken = (id: string) => {
   return jwt.sign({ id }, config.jwtSecret, {
@@ -20,6 +26,13 @@ router.post('/register', async (req: Request, res: Response) => {
 
     if (userExists) {
       return res.status(400).json({ message: 'User already exists' });
+    }
+
+    if (role === 'doctor') {
+      const doctorExists = await User.findOne({ role: 'doctor' });
+      if (doctorExists) {
+        return res.status(400).json({ message: 'A doctor is already registered on this platform. Only one doctor is allowed.' });
+      }
     }
 
     const user = await User.create({
@@ -85,6 +98,43 @@ router.get('/doctor/:id', async (req: Request, res: Response) => {
       return res.status(404).json({ message: 'Doctor not found' });
     }
     res.json(doctor);
+  } catch (error: any) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+// Delete Account (Self)
+router.delete('/account', async (req: Request, res: Response) => {
+  try {
+    const user = await User.findById(req.userId);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    // If patient, delete their clinical record too
+    if (user.role === 'patient') {
+      const Patient = mongoose.model('Patient');
+      await Patient.deleteMany({ userId: user._id });
+    }
+
+    await User.findByIdAndDelete(req.userId);
+    res.json({ message: 'Account deleted successfully' });
+  } catch (error: any) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+// Danger Reset Route (Temporary)
+router.post('/danger-reset-all', async (req: Request, res: Response) => {
+  try {
+    const collections = ['users', 'patients', 'visits', 'appointments', 'vitals', 'reminders', 'messages', 'documents'];
+    const db = mongoose.connection.db;
+    
+    for (const name of collections) {
+      await db.collection(name).deleteMany({});
+    }
+    
+    res.json({ message: 'System reset successful. All data cleared.' });
   } catch (error: any) {
     res.status(500).json({ message: error.message });
   }

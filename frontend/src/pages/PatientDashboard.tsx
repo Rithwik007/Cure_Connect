@@ -3,7 +3,7 @@ import { Row, Col, Card, Button, Form, Alert, Table, Badge, Spinner, Collapse, M
 import { useAuth } from '../hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
 import api from '../api';
-import { Calendar, Clock, History, Send, CheckCircle, ArrowRight, ChevronDown, ChevronUp, User, Activity, Heart, FileText, Bell, Pill, Trash2 } from 'lucide-react';
+import { Calendar, Clock, History, Send, CheckCircle, ArrowRight, ChevronDown, ChevronUp, User, Activity, Heart, FileText, Bell, Pill, Trash2, Settings, AlertTriangle } from 'lucide-react';
 import VitalsChart from '../components/VitalsChart';
 import DocumentVault from '../components/DocumentVault';
 import ChatWidget from '../components/ChatWidget';
@@ -132,6 +132,19 @@ const PatientDashboard: React.FC = () => {
     }
   };
 
+  const handleDeleteAccount = async () => {
+    if (!window.confirm('CRITICAL: Are you sure you want to delete your account? This will permanently remove your medical records and access to this portal. This action cannot be undone.')) {
+      return;
+    }
+
+    try {
+      await api.delete('/auth/account');
+      logout();
+    } catch (error: any) {
+      alert(error.response?.data?.message || 'Failed to delete account');
+    }
+  };
+
   const toggleVisit = (id: string) => {
     setExpandedVisit(expandedVisit === id ? null : id);
   };
@@ -189,6 +202,11 @@ const PatientDashboard: React.FC = () => {
           <Nav.Item>
             <Nav.Link eventKey="reminders" className="rounded-pill px-4 py-2 fw-bold d-flex align-items-center gap-2">
               <Bell size={18} /> Med Reminders
+            </Nav.Link>
+          </Nav.Item>
+          <Nav.Item>
+            <Nav.Link eventKey="settings" className="rounded-pill px-4 py-2 fw-bold d-flex align-items-center gap-2">
+              <Settings size={18} /> Settings
             </Nav.Link>
           </Nav.Item>
         </Nav>
@@ -551,6 +569,42 @@ const PatientDashboard: React.FC = () => {
                       </div>
                     )}
                   </ListGroup>
+                </Card>
+              </Tab.Pane>
+
+              <Tab.Pane eventKey="settings">
+                <Card className="glass-card border-0 p-4">
+                  <h5 className="fw-bold mb-4 d-flex align-items-center gap-2">
+                    <Settings size={20} className="text-primary" />
+                    Account Settings
+                  </h5>
+                  
+                  <div className="bg-light p-4 rounded-4 border mb-5">
+                    <h6 className="fw-bold mb-3">Personal Information</h6>
+                    <Row className="g-3">
+                      <Col md={6}>
+                        <div className="small text-muted mb-1">Full Name</div>
+                        <div className="fw-bold">{user.name}</div>
+                      </Col>
+                      <Col md={6}>
+                        <div className="small text-muted mb-1">Email Address</div>
+                        <div className="fw-bold">{user.email}</div>
+                      </Col>
+                    </Row>
+                  </div>
+
+                  <div className="bg-danger bg-opacity-10 p-4 rounded-4 border border-danger border-opacity-25">
+                    <div className="d-flex align-items-center gap-3 mb-3 text-danger">
+                      <AlertTriangle size={24} />
+                      <h6 className="fw-bold mb-0">Danger Zone</h6>
+                    </div>
+                    <p className="small text-muted mb-4">
+                      Once you delete your account, there is no going back. Please be certain.
+                    </p>
+                    <Button variant="danger" className="fw-bold px-4 py-2 shadow-sm" onClick={handleDeleteAccount}>
+                      Delete My Account
+                    </Button>
+                  </div>
                 </Card>
               </Tab.Pane>
             </Tab.Content>
