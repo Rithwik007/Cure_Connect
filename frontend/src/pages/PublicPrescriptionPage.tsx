@@ -2,7 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { Container, Card, Table, Badge, Spinner, Alert, Row, Col } from 'react-bootstrap';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
-import { Activity, Pill, Calendar, ShieldCheck, CheckCircle } from 'lucide-react';
+import { Activity, Pill, Calendar, ShieldCheck, CheckCircle, Download } from 'lucide-react';
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
 
 const PublicPrescriptionPage: React.FC = () => {
   const { visitId } = useParams<{ visitId: string }>();
@@ -34,6 +36,25 @@ const PublicPrescriptionPage: React.FC = () => {
     verifyPrescription();
   }, [visitId]);
 
+  const downloadPrescription = async () => {
+    const element = document.getElementById('prescription-content');
+    if (!element) return;
+
+    try {
+      const canvas = await html2canvas(element, { scale: 2 });
+      const imgData = canvas.toDataURL('image/png');
+      const pdf = new jsPDF('p', 'mm', 'a4');
+      const imgProps = pdf.getImageProperties(imgData);
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+      
+      pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+      pdf.save(`Prescription_${data.patient?.name || 'Verified'}.pdf`);
+    } catch (err) {
+      console.error('PDF generation failed', err);
+    }
+  };
+
   if (loading) return (
     <div className="d-flex justify-content-center align-items-center vh-100 bg-light">
       <div className="text-center">
@@ -61,10 +82,17 @@ const PublicPrescriptionPage: React.FC = () => {
             <CheckCircle size={16} /> Verified E-Prescription
           </Badge>
           <h2 className="fw-bold">Pharmacist Verification Portal</h2>
-          <p className="text-muted">Instant validation of CureConnect digital records</p>
+          <p className="text-muted mb-4">Instant validation of CureConnect digital records</p>
+          <button 
+            className="btn btn-primary btn-premium px-5 py-3 rounded-pill shadow-lg fw-bold d-inline-flex align-items-center gap-2"
+            onClick={downloadPrescription}
+          >
+            <Download size={20} />
+            Download Prescription PDF
+          </button>
         </div>
 
-        <Card className="border-0 shadow-lg overflow-hidden rounded-4 mx-auto" style={{ maxWidth: '800px' }}>
+        <Card id="prescription-content" className="border-0 shadow-lg overflow-hidden rounded-4 mx-auto" style={{ maxWidth: '800px' }}>
           <Card.Header className="bg-primary text-white p-4 border-0">
             <Row className="align-items-center">
               <Col md={8}>
