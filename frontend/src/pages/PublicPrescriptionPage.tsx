@@ -1,0 +1,150 @@
+import React, { useEffect, useState } from 'react';
+import { Container, Card, Table, Badge, Spinner, Alert, Row, Col } from 'react-bootstrap';
+import { useParams } from 'react-router-dom';
+import axios from 'axios';
+import { Activity, Pill, Calendar, ShieldCheck, CheckCircle } from 'lucide-react';
+
+const PublicPrescriptionPage: React.FC = () => {
+  const { visitId } = useParams<{ visitId: string }>();
+  const [data, setData] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+
+  // Use raw axios to avoid interceptors that might redirect to login
+  const apiBase = import.meta.env.VITE_API_URL || import.meta.env.VITE_API_BASE_URL || 'http://localhost:3001/api';
+  const getCleanBase = () => {
+    let url = apiBase;
+    if (!url.endsWith('/api') && !url.endsWith('/api/')) {
+        url = url.endsWith('/') ? `${url}api` : `${url}/api`;
+    }
+    return url;
+  };
+
+  useEffect(() => {
+    const verifyPrescription = async () => {
+      try {
+        const response = await axios.get(`${getCleanBase()}/visits/public/${visitId}`);
+        setData(response.data.data);
+      } catch (err: any) {
+        setError('Invalid or expired prescription. Please contact the clinic.');
+      } finally {
+        setLoading(false);
+      }
+    };
+    verifyPrescription();
+  }, [visitId]);
+
+  if (loading) return (
+    <div className="d-flex justify-content-center align-items-center vh-100 bg-light">
+      <div className="text-center">
+        <Spinner animation="grow" variant="primary" />
+        <p className="mt-3 text-muted fw-bold">Verifying Clinical Record...</p>
+      </div>
+    </div>
+  );
+
+  if (error || !data) return (
+    <Container className="py-5">
+        <Alert variant="danger" className="text-center py-5 border-0 shadow-lg rounded-4">
+            <ShieldCheck size={48} className="mb-3 opacity-50" />
+            <h4 className="fw-bold">Verification Failed</h4>
+            <p className="mb-0">{error}</p>
+        </Alert>
+    </Container>
+  );
+
+  return (
+    <div className="bg-light min-vh-100 py-5">
+      <Container>
+        <div className="text-center mb-5">
+          <Badge bg="success" className="px-4 py-2 rounded-pill mb-3 shadow-sm d-inline-flex align-items-center gap-2">
+            <CheckCircle size={16} /> Verified E-Prescription
+          </Badge>
+          <h2 className="fw-bold">Pharmacist Verification Portal</h2>
+          <p className="text-muted">Instant validation of CureConnect digital records</p>
+        </div>
+
+        <Card className="border-0 shadow-lg overflow-hidden rounded-4 mx-auto" style={{ maxWidth: '800px' }}>
+          <Card.Header className="bg-primary text-white p-4 border-0">
+            <Row className="align-items-center">
+              <Col>
+                <div className="small fw-bold opacity-75 text-uppercase mb-1">Patient Name</div>
+                <h4 className="fw-bold mb-0">{data.patient?.name}</h4>
+              </Col>
+              <Col className="text-end">
+                <div className="small fw-bold opacity-75 text-uppercase mb-1">Issue Date</div>
+                <h5 className="fw-bold mb-0">{new Date(data.date).toLocaleDateString()}</h5>
+              </Col>
+            </Row>
+          </Card.Header>
+
+          <Card.Body className="p-4 p-md-5">
+            <div className="mb-5">
+              <h6 className="text-primary fw-bold text-uppercase ls-wide mb-3 d-flex align-items-center gap-2">
+                <Activity size={18} /> Diagnosis
+              </h6>
+              <div className="bg-light p-3 rounded-3 border-start border-primary border-4 fw-bold fs-5">
+                {data.diagnosis}
+              </div>
+            </div>
+
+            <div className="mb-5">
+              <h6 className="text-primary fw-bold text-uppercase ls-wide mb-3 d-flex align-items-center gap-2">
+                <Pill size={18} /> Medication Orders
+              </h6>
+              <div className="table-responsive">
+                <Table className="align-middle mb-0">
+                  <thead className="bg-light">
+                    <tr>
+                      <th className="border-0 py-3 text-muted fw-bold small text-uppercase">Medicine</th>
+                      <th className="border-0 py-3 text-muted fw-bold small text-uppercase">Dosage</th>
+                      <th className="border-0 py-3 text-muted fw-bold small text-uppercase text-end">Frequency</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {data.prescription.map((med: any, idx: number) => (
+                      <tr key={idx}>
+                        <td className="py-3 fw-bold fs-5">{med.medicine}</td>
+                        <td className="py-3">{med.dosage}</td>
+                        <td className="py-3 text-end">
+                          <Badge bg="primary" className="bg-opacity-10 text-primary px-3 py-2 border-0">
+                            {med.frequency}
+                          </Badge>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </Table>
+              </div>
+            </div>
+
+            <div className="border-top pt-4">
+              <Row>
+                <Col md={6}>
+                  <div className="d-flex align-items-center gap-2 text-muted">
+                    <Calendar size={18} />
+                    <span className="small fw-bold">Expires:</span>
+                    <span className="fw-bold text-dark">
+                      {data.nextAppointment ? new Date(data.nextAppointment).toLocaleDateString() : 'N/A'}
+                    </span>
+                  </div>
+                </Col>
+                <Col md={6} className="text-end">
+                  <div className="small text-muted mb-1">Authenticated by</div>
+                  <h6 className="fw-bold mb-0">Dr. {data.doctor?.name}</h6>
+                  <div className="small text-muted">{data.doctor?.email}</div>
+                </Col>
+              </Row>
+            </div>
+          </Card.Body>
+          <Card.Footer className="bg-white border-0 text-center py-4 small text-muted opacity-50">
+            This record is cryptographically linked to the CureConnect database. 
+            Tampering with this digital record is a violation of healthcare regulations.
+          </Card.Footer>
+        </Card>
+      </Container>
+    </div>
+  );
+};
+
+export default PublicPrescriptionPage;

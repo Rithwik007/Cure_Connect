@@ -6,6 +6,33 @@ import { protect } from '../middleware/auth';
 
 const router = Router();
 
+// Public route for Pharmacist Verification (No login required)
+router.get('/public/:id', async (req: Request, res: Response) => {
+  try {
+    const visit = await Visit.findById(req.params.id)
+      .populate('patientId', 'name age gender')
+      .populate('doctorId', 'name email');
+      
+    if (!visit) {
+      return res.status(404).json({ success: false, error: 'Prescription not found' });
+    }
+
+    // Return only necessary data for the pharmacist
+    const publicData = {
+      date: visit.date,
+      prescription: visit.prescription,
+      diagnosis: visit.diagnosis,
+      nextAppointment: visit.nextAppointment,
+      patient: visit.patientId,
+      doctor: visit.doctorId
+    };
+
+    res.json({ success: true, data: publicData });
+  } catch (error) {
+    res.status(500).json({ success: false, error: 'Verification system error' });
+  }
+});
+
 router.use(protect);
 
 // Get my own visit history (Patient)

@@ -3,7 +3,7 @@ import { Row, Col, Card, Button, Spinner, Alert, Table, Badge } from 'react-boot
 import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import api from '../api';
-import { Download, Printer, ArrowLeft, Clipboard, Pill, Calendar, Activity } from 'lucide-react';
+import { ArrowLeft, Clipboard, Pill, Calendar, Activity, ShieldCheck, ExternalLink } from 'lucide-react';
 import { QRCodeSVG } from 'qrcode.react';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
@@ -102,13 +102,13 @@ const VisitDetailPage: React.FC = () => {
           {user?.role === 'doctor' ? 'Back to Patient Profile' : 'Back to Health Portal'}
         </Button>
         <div className="d-flex gap-2">
-          <Button variant="outline-primary" className="btn-premium py-2 px-4 shadow-sm" onClick={downloadPrescription}>
-            <Download size={18} />
-            Download PDF
-          </Button>
-          <Button variant="primary" className="btn-premium py-2 px-4 shadow-lg" onClick={() => window.print()}>
-            <Printer size={18} />
-            Print
+          <Button 
+            variant="success" 
+            className="btn-premium py-2 px-4 shadow-lg d-flex align-items-center gap-2" 
+            onClick={() => window.open(`/verify-prescription/${visitId}`, '_blank')}
+          >
+            <ShieldCheck size={18} />
+            Show to Pharmacist
           </Button>
         </div>
       </div>
@@ -134,12 +134,13 @@ const VisitDetailPage: React.FC = () => {
                     </div>
                   </div>
                 </div>
-                <div className="bg-white p-2 rounded-3 shadow-sm border">
+                <div className="bg-white p-2 rounded-3 shadow-sm border text-center">
                   <QRCodeSVG 
-                    value={`${window.location.origin}/visits/${visitId}?src=qr`} 
+                    value={`${window.location.origin}/verify-prescription/${visitId}`} 
                     size={80} 
                     level="H" 
                   />
+                  <div className="text-dark small fw-bold mt-1" style={{ fontSize: '0.6rem' }}>SCAN TO VERIFY</div>
                 </div>
               </div>
             </Card.Header>
@@ -238,12 +239,12 @@ const VisitDetailPage: React.FC = () => {
             
             <div className="mt-4">
               <p className="small text-muted mb-4">
-                This QR code allows pharmacies to verify this prescription instantly. After deployment, scanning this will take them directly to the secure digital record.
+                This QR code allows pharmacies to verify this prescription instantly **without logging in**. Scanning this will take them directly to the secure digital record.
               </p>
               <div className="d-grid gap-2">
-                <Button variant="light" className="py-3 fw-bold rounded-4 shadow-sm" onClick={() => window.print()}>
-                  <Printer size={18} className="me-2" />
-                  Print for Patient
+                <Button variant="primary" className="py-3 fw-bold rounded-4 shadow-sm btn-premium" onClick={() => window.open(`/verify-prescription/${visitId}`, '_blank')}>
+                  <ExternalLink size={18} className="me-2" />
+                  View Pharmacist Portal
                 </Button>
               </div>
             </div>

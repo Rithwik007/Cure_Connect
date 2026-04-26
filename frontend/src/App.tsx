@@ -11,6 +11,7 @@ import NewPatientPage from './pages/NewPatientPage';
 import NewVisitPage from './pages/NewVisitPage';
 import VisitDetailPage from './pages/VisitDetailPage';
 import PatientDashboard from './pages/PatientDashboard';
+import PublicPrescriptionPage from './pages/PublicPrescriptionPage';
 import { Spinner } from 'react-bootstrap';
 
 interface ProtectedProps {
@@ -60,6 +61,7 @@ const App: React.FC = () => {
         {/* Public Routes */}
         <Route path="/login" element={<PublicRoute><LoginPage /></PublicRoute>} />
         <Route path="/register" element={<PublicRoute><RegisterPage /></PublicRoute>} />
+        <Route path="/verify-prescription/:visitId" element={<PublicPrescriptionPage />} />
 
         {/* Doctor Routes */}
         <Route
