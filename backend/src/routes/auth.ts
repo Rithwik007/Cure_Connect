@@ -89,6 +89,19 @@ router.post('/login', async (req: Request, res: Response) => {
   }
 });
 
+// Get Current Doctor (Primary)
+router.get('/doctor', protect, async (req: Request, res: Response) => {
+  try {
+    const doctor = await User.findOne({ role: 'doctor' }).select('name email phone');
+    if (!doctor) {
+      return res.status(404).json({ message: 'No doctor registered yet' });
+    }
+    res.json(doctor);
+  } catch (error: any) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
 // Get Doctor by ID
 router.get('/doctor/:id', async (req: Request, res: Response) => {
   try {
