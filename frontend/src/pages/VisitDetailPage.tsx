@@ -131,28 +131,29 @@ const VisitDetailPage: React.FC = () => {
         <Col lg={8}>
           {/* Main Content Area (Used for PDF Export) */}
           <Card className="glass-card border-0 shadow-lg overflow-hidden" id="prescription-content">
-            <Card.Header className="bg-primary text-white p-5 border-0">
-              <div className="d-flex justify-content-between align-items-start">
-                <div>
+            <Card.Header className="bg-primary text-white p-4 p-md-5 border-0">
+              <div className="d-flex flex-column flex-md-row justify-content-between align-items-start gap-4">
+                <div className="flex-grow-1">
                   <h2 className="fw-bold mb-1">CureConnect E-Prescription</h2>
                   <p className="opacity-75 mb-4">Secure Digital Health Record</p>
                   
-                  <div className="d-flex gap-5">
+                  <div className="d-flex flex-wrap gap-4 gap-md-5">
                     <div>
                       <div className="small fw-bold opacity-75 text-uppercase mb-1">Patient Name</div>
-                      <h4 className="fw-bold">{patient?.name}</h4>
+                      <h4 className="fw-bold mb-0">{patient?.name}</h4>
                     </div>
                     <div>
                       <div className="small fw-bold opacity-75 text-uppercase mb-1">Visit Date</div>
-                      <h4 className="fw-bold">{new Date(visit.date).toLocaleDateString()}</h4>
+                      <h4 className="fw-bold mb-0">{new Date(visit.date).toLocaleDateString()}</h4>
                     </div>
                   </div>
                 </div>
-                <div className="bg-white p-3 rounded-3 shadow-sm border text-center">
+                <div className="bg-white p-3 rounded-4 shadow-sm border text-center align-self-center align-self-md-start mx-auto mx-md-0" style={{ minWidth: '160px' }}>
                   <QRCodeSVG 
                     value={`${window.location.origin}/verify-prescription/${visitId}`} 
                     size={140} 
                     level="H" 
+                    includeMargin={false}
                   />
                   <div className="text-dark small fw-bold mt-2" style={{ fontSize: '0.75rem' }}>SCAN TO VERIFY</div>
                 </div>
