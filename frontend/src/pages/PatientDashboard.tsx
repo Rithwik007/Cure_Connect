@@ -3,7 +3,7 @@ import { Row, Col, Card, Button, Form, Alert, Table, Badge, Spinner, Collapse, M
 import { useAuth } from '../hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
 import api from '../api';
-import { Calendar, Clock, History, Send, CheckCircle, ArrowRight, ChevronDown, ChevronUp, User, Activity, Heart, FileText, Bell, Pill, Trash2, Settings, AlertTriangle } from 'lucide-react';
+import { Calendar, Clock, History, Send, CheckCircle, ArrowRight, ChevronDown, ChevronUp, User, Activity, Heart, FileText, Bell, Pill, Trash2, Settings, AlertTriangle, Loader } from 'lucide-react';
 import VitalsChart from '../components/VitalsChart';
 import DocumentVault from '../components/DocumentVault';
 import ChatWidget from '../components/ChatWidget';
@@ -161,6 +161,7 @@ const PatientDashboard: React.FC = () => {
   };
 
   const upcomingApps = appointments.filter(a => a.status === 'approved');
+  const pendingApps = appointments.filter(a => a.status === 'pending');
 
   if (loading || !user) return (
     <div className="d-flex justify-content-center align-items-center vh-100">
@@ -314,6 +315,38 @@ const PatientDashboard: React.FC = () => {
           <Col lg={8}>
             <Tab.Content>
               <Tab.Pane eventKey="clinical">
+                {/* Pending Approval Requests */}
+                {pendingApps.length > 0 && (
+                  <div className="mb-5 animate-fade-in">
+                    <div className="d-flex align-items-center justify-content-between mb-4 px-2">
+                      <div className="d-flex align-items-center gap-2">
+                        <div className="bg-warning bg-opacity-10 p-2 rounded-3 text-warning">
+                          <Loader size={24} className="animate-spin" />
+                        </div>
+                        <h4 className="mb-0 fw-bold">Pending Approval</h4>
+                      </div>
+                      <Badge bg="warning" text="dark" className="px-3 py-2 rounded-pill shadow-sm">{pendingApps.length} Waiting</Badge>
+                    </div>
+                    
+                    {pendingApps.map(app => (
+                      <Card key={app._id} className="glass-card border-0 mb-3 border-start border-warning border-4 overflow-hidden">
+                        <Card.Body className="d-flex justify-content-between align-items-center py-4 px-4">
+                          <div>
+                            <div className="small text-muted fw-bold text-uppercase ls-wide mb-1">Requested For</div>
+                            <h5 className="fw-bold text-dark mb-1">
+                              {new Date(app.date).toLocaleDateString(undefined, { weekday: 'long', month: 'long', day: 'numeric' })}
+                            </h5>
+                            <p className="mb-0 text-muted">{app.reason}</p>
+                          </div>
+                          <Badge bg="warning" text="dark" className="px-3 py-2 rounded-pill d-flex align-items-center gap-2">
+                            <Clock size={14} /> Pending
+                          </Badge>
+                        </Card.Body>
+                      </Card>
+                    ))}
+                  </div>
+                )}
+
                 {/* Upcoming Visits */}
                 {upcomingApps.length > 0 && (
                   <div className="mb-5 animate-fade-in">
