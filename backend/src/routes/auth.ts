@@ -16,6 +16,16 @@ const generateToken = (id: string) => {
   });
 };
 
+// Check if doctor exists
+router.get('/doctor-check', async (req: Request, res: Response) => {
+  try {
+    const doctor = await User.findOne({ role: 'doctor' });
+    res.json({ exists: !!doctor });
+  } catch (error: any) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
 // Register
 router.post('/register', async (req: Request, res: Response) => {
   const { name, email, password, role, age, gender, phone } = req.body;

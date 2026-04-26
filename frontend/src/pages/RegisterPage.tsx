@@ -18,12 +18,25 @@ const RegisterPage: React.FC = () => {
   const [phone, setPhone] = useState('');
   
   const [error, setError] = useState('');
+  const [doctorExists, setDoctorExists] = useState(false);
   const navigate = useNavigate();
   const { login } = useAuth();
 
+  React.useEffect(() => {
+    const checkDoctor = async () => {
+      try {
+        const { data } = await api.get('/auth/doctor-check');
+        setDoctorExists(data.exists);
+      } catch (err) {
+        console.error('Doctor check failed', err);
+      }
+    };
+    checkDoctor();
+  }, []);
+
   const roles = [
     { name: 'Patient', value: 'patient' },
-    { name: 'Doctor', value: 'doctor' },
+    ...(!doctorExists ? [{ name: 'Doctor', value: 'doctor' }] : []),
   ];
 
   const submitHandler = async (e: React.FormEvent) => {
