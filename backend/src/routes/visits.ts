@@ -10,7 +10,7 @@ const router = Router();
 router.get('/public/:id', async (req: Request, res: Response) => {
   try {
     const visit = await Visit.findById(req.params.id)
-      .populate('patientId', 'name age gender')
+      .populate('patientId', 'name age gender phone')
       .populate('doctorId', 'name email');
       
     if (!visit) {
@@ -22,6 +22,8 @@ router.get('/public/:id', async (req: Request, res: Response) => {
       date: visit.date,
       prescription: visit.prescription,
       diagnosis: visit.diagnosis,
+      symptoms: visit.symptoms,
+      treatment: visit.treatment,
       nextAppointment: visit.nextAppointment,
       patient: visit.patientId,
       doctor: visit.doctorId

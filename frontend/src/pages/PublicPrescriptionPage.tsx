@@ -67,25 +67,49 @@ const PublicPrescriptionPage: React.FC = () => {
         <Card className="border-0 shadow-lg overflow-hidden rounded-4 mx-auto" style={{ maxWidth: '800px' }}>
           <Card.Header className="bg-primary text-white p-4 border-0">
             <Row className="align-items-center">
-              <Col>
-                <div className="small fw-bold opacity-75 text-uppercase mb-1">Patient Name</div>
-                <h4 className="fw-bold mb-0">{data.patient?.name}</h4>
+              <Col md={8}>
+                <div className="small fw-bold opacity-75 text-uppercase mb-1">Patient Details</div>
+                <h3 className="fw-bold mb-1">{data.patient?.name}</h3>
+                <div className="d-flex gap-3 small opacity-75">
+                    <span>{data.patient?.age} Yrs</span>
+                    <span>•</span>
+                    <span className="text-capitalize">{data.patient?.gender}</span>
+                    <span>•</span>
+                    <span>{data.patient?.phone || 'No phone provided'}</span>
+                </div>
               </Col>
-              <Col className="text-end">
-                <div className="small fw-bold opacity-75 text-uppercase mb-1">Issue Date</div>
+              <Col md={4} className="text-md-end mt-3 mt-md-0">
+                <div className="small fw-bold opacity-75 text-uppercase mb-1">Visit Date</div>
                 <h5 className="fw-bold mb-0">{new Date(data.date).toLocaleDateString()}</h5>
               </Col>
             </Row>
           </Card.Header>
 
           <Card.Body className="p-4 p-md-5">
+            <Row className="mb-5 g-4">
+              <Col md={6}>
+                <h6 className="text-primary fw-bold text-uppercase ls-wide mb-3 d-flex align-items-center gap-2">
+                  <Activity size={18} /> Symptoms
+                </h6>
+                <div className="bg-light p-3 rounded-4 border-0 text-muted">
+                  {data.symptoms}
+                </div>
+              </Col>
+              <Col md={6}>
+                <h6 className="text-primary fw-bold text-uppercase ls-wide mb-3 d-flex align-items-center gap-2">
+                  <Activity size={18} /> Diagnosis
+                </h6>
+                <div className="bg-light p-3 rounded-4 border-start border-primary border-4 fw-bold fs-5">
+                  {data.diagnosis}
+                </div>
+              </Col>
+            </Row>
+
             <div className="mb-5">
-              <h6 className="text-primary fw-bold text-uppercase ls-wide mb-3 d-flex align-items-center gap-2">
-                <Activity size={18} /> Diagnosis
-              </h6>
-              <div className="bg-light p-3 rounded-3 border-start border-primary border-4 fw-bold fs-5">
-                {data.diagnosis}
-              </div>
+                <h6 className="text-primary fw-bold text-uppercase ls-wide mb-3">Clinical Plan & Treatment</h6>
+                <div className="bg-light p-3 rounded-4 border-0">
+                    {data.treatment}
+                </div>
             </div>
 
             <div className="mb-5">
