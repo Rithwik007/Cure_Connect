@@ -100,6 +100,33 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
       <Container className="pb-5 animate-fade-in">
         {children}
       </Container>
+
+      <footer className="mt-auto py-5 bg-white border-top">
+        <Container>
+          <Row className="align-items-center">
+            <Col md={6}>
+              <div className="d-flex align-items-center gap-2 text-primary fw-bold mb-2">
+                <Activity size={20} />
+                <span>CureConnect</span>
+              </div>
+              <p className="text-muted small mb-0">
+                &copy; 2026 CureConnect Healthcare. All medical data is encrypted and stored securely. 
+                This portal is for authorized clinical use only.
+              </p>
+            </Col>
+            <Col md={6} className="text-md-end mt-4 mt-md-0">
+              <div className="d-flex gap-3 justify-content-md-end">
+                <div className="bg-success bg-opacity-10 text-success px-3 py-1 rounded-pill small fw-bold border border-success border-opacity-25">
+                  SSL SECURE
+                </div>
+                <div className="bg-primary bg-opacity-10 text-primary px-3 py-1 rounded-pill small fw-bold border border-primary border-opacity-25">
+                  HIPAA COMPLIANT DESIGN
+                </div>
+              </div>
+            </Col>
+          </Row>
+        </Container>
+      </footer>
     </>
   );
 };

@@ -93,6 +93,10 @@ const LoginPage: React.FC = () => {
                 </Form>
 
                 <div className="text-center mt-4 pt-3 border-top">
+                  <div className="bg-light p-2 rounded-3 mb-3 d-flex align-items-center justify-content-center gap-2">
+                    <div className="bg-success rounded-circle" style={{ width: '8px', height: '8px' }}></div>
+                    <span className="small text-muted fw-semibold">End-to-End Encrypted Portal</span>
+                  </div>
                   <span className="text-muted small">New to the platform? </span>
                   <Link to="/register" className="small fw-bold text-primary text-decoration-none">Register Account</Link>
                 </div>
