@@ -3,7 +3,7 @@ import { Row, Col, Card, Button, Form, Alert, Table, Badge, Spinner, Collapse, M
 import { useAuth } from '../hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
 import api from '../api';
-import { Calendar, Clock, History, Send, Search, CheckCircle, ArrowRight, ChevronDown, ChevronUp, User, Activity, Heart, Thermometer, Weight, FileText, Bell, Pill, Trash2 } from 'lucide-react';
+import { Calendar, Clock, History, Send, CheckCircle, ArrowRight, ChevronDown, ChevronUp, User, Activity, Heart, FileText, Bell, Pill, Trash2 } from 'lucide-react';
 import VitalsChart from '../components/VitalsChart';
 import DocumentVault from '../components/DocumentVault';
 import ChatWidget from '../components/ChatWidget';
@@ -147,7 +147,6 @@ const PatientDashboard: React.FC = () => {
     }
   };
 
-  const pendingApps = appointments.filter(a => a.status === 'pending');
   const upcomingApps = appointments.filter(a => a.status === 'approved');
 
   if (loading || !user) return (

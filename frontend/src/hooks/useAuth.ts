@@ -5,6 +5,9 @@ export interface User {
   name: string;
   email: string;
   role: 'doctor' | 'patient';
+  age?: number;
+  gender?: string;
+  phone?: string;
 }
 
 export function useAuth() {

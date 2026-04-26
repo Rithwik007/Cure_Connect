@@ -20,7 +20,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     <>
       <Navbar expand="lg" className="nav-glass mb-4 py-3">
         <Container>
-          <Navbar.Brand as={Link} to="/" className="fw-bold d-flex align-items-center gap-2 fs-4 text-primary">
+          <Navbar.Brand as={Link as any} to="/" className="fw-bold d-flex align-items-center gap-2 fs-4 text-primary">
             <div className="bg-primary bg-opacity-10 p-2 rounded-3">
               <Activity size={24} className="text-primary" />
             </div>
@@ -34,7 +34,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
               {user?.role === 'doctor' && (
                 <>
                   <Nav.Link 
-                    as={Link} 
+                    as={Link as any} 
                     to="/dashboard" 
                     className={`px-3 py-2 rounded-pill fw-medium d-flex align-items-center gap-2 transition-all ${isActive('/dashboard') ? 'bg-primary text-white shadow-sm' : 'text-muted'}`}
                   >
@@ -42,7 +42,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
                     Doctor Dashboard
                   </Nav.Link>
                   <Nav.Link 
-                    as={Link} 
+                    as={Link as any} 
                     to="/patients" 
                     className={`px-3 py-2 rounded-pill fw-medium d-flex align-items-center gap-2 transition-all ${isActive('/patients') ? 'bg-primary text-white shadow-sm' : 'text-muted'}`}
                   >
@@ -53,7 +53,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
               )}
               {user?.role === 'patient' && (
                 <Nav.Link 
-                  as={Link} 
+                  as={Link as any} 
                   to="/patient-dashboard" 
                   className={`px-3 py-2 rounded-pill fw-medium d-flex align-items-center gap-2 transition-all ${isActive('/patient-dashboard') ? 'bg-primary text-white shadow-sm' : 'text-muted'}`}
                 >
@@ -86,8 +86,8 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
                 </>
               ) : (
                 <>
-                  <Nav.Link as={Link} to="/login" className="fw-semibold text-muted">Login</Nav.Link>
-                  <Button as={Link} to="/register" variant="primary" className="btn-premium">
+                  <Nav.Link as={Link as any} to="/login" className="fw-semibold text-muted">Login</Nav.Link>
+                  <Button as={Link as any} to="/register" variant="primary" className="btn-premium">
                     Get Started
                   </Button>
                 </>

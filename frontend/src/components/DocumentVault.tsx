@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Row, Col, Card, Button, Form, ProgressBar, ListGroup, Badge, Spinner } from 'react-bootstrap';
+import { Row, Col, Card, Button, Form, ListGroup, Badge, Spinner } from 'react-bootstrap';
 import { FileText, Upload, Trash2, ExternalLink, File, Image as ImageIcon } from 'lucide-react';
 import api from '../api';
 

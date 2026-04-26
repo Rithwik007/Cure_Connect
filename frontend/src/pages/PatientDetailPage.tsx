@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Row, Col, Card, Button, Table, Badge, Spinner, Alert, Tab, Nav } from 'react-bootstrap';
 import api from '../api';
-import { User, Calendar, Plus, ChevronRight, Activity, Heart, Thermometer, FileText, Download, History, MessageCircle } from 'lucide-react';
+import { User, Calendar, Plus, ChevronRight, Activity, Heart, FileText, History, MessageCircle } from 'lucide-react';
 import VitalsChart from '../components/VitalsChart';
 import DocumentVault from '../components/DocumentVault';
 import ChatWidget from '../components/ChatWidget';
