@@ -14,9 +14,9 @@ const PatientsPage: React.FC = () => {
     const fetchPatients = async () => {
       try {
         const { data } = await api.get('/patients');
-        setPatients(data.data);
-      } catch (err) {
-        setError('Failed to fetch patients');
+        setPatients(Array.isArray(data.data) ? data.data : []);
+      } catch (err: any) {
+        setError(err.response?.data?.message || err.message || 'Connection to clinical server failed');
       } finally {
         setLoading(false);
       }
