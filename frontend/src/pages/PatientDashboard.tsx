@@ -9,7 +9,7 @@ import DocumentVault from '../components/DocumentVault';
 import ChatWidget from '../components/ChatWidget';
 
 const PatientDashboard: React.FC = () => {
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
   const navigate = useNavigate();
   const [appointments, setAppointments] = useState<any[]>([]);
   const [visits, setVisits] = useState<any[]>([]);

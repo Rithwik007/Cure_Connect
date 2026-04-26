@@ -46,11 +46,7 @@ const RegisterPage: React.FC = () => {
     }
 
     try {
-      const config = {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      };
+
 
       const payload = {
         name,

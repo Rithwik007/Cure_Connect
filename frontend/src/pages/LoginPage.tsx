@@ -22,11 +22,7 @@ const LoginPage: React.FC = () => {
     }
 
     try {
-      const config = {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      };
+
 
       const { data } = await api.post(
         '/auth/login',
