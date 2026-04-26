@@ -41,7 +41,21 @@ const PublicPrescriptionPage: React.FC = () => {
     if (!element) return;
 
     try {
-      const canvas = await html2canvas(element, { scale: 2 });
+      // Force a desktop-like width for high-quality capture on mobile
+      const captureWidth = 1024;
+      const originalStyle = element.style.width;
+      element.style.width = `${captureWidth}px`;
+
+      const canvas = await html2canvas(element, { 
+        scale: 2,
+        useCORS: true,
+        windowWidth: captureWidth,
+        width: captureWidth
+      });
+
+      // Restore original style
+      element.style.width = originalStyle;
+
       const imgData = canvas.toDataURL('image/png');
       const pdf = new jsPDF('p', 'mm', 'a4');
       const imgProps = pdf.getImageProperties(imgData);
@@ -114,6 +128,15 @@ const PublicPrescriptionPage: React.FC = () => {
           </Card.Header>
 
           <Card.Body className="p-4 p-md-5">
+            <Row className="mb-4 g-4">
+              <Col md={12}>
+                <div className="bg-primary bg-opacity-10 p-3 rounded-4 border-start border-primary border-4">
+                  <h6 className="text-primary fw-bold text-uppercase ls-wide mb-1">Reason for Visit</h6>
+                  <p className="mb-0 fw-bold fs-5 text-dark">{data.reason || 'Not specified'}</p>
+                </div>
+              </Col>
+            </Row>
+
             <Row className="mb-5 g-4">
               <Col md={6}>
                 <h6 className="text-primary fw-bold text-uppercase ls-wide mb-3 d-flex align-items-center gap-2">

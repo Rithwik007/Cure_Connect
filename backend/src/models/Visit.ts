@@ -8,6 +8,7 @@ export interface IVisit extends Document {
   diagnosis: string;
   treatment: string;
   notes?: string;
+  reason?: string;
   nextAppointment?: string;
   prescription?: Array<{
     medicine: string;
@@ -26,6 +27,7 @@ const VisitSchema: Schema = new Schema(
     diagnosis: { type: String, required: true },
     treatment: { type: String, required: true },
     notes: { type: String },
+    reason: { type: String },
     nextAppointment: { type: String },
     prescription: [{
       medicine: { type: String },

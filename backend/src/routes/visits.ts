@@ -22,6 +22,7 @@ router.get('/public/:id', async (req: Request, res: Response) => {
       date: visit.date,
       prescription: visit.prescription,
       diagnosis: visit.diagnosis,
+      reason: visit.reason,
       symptoms: visit.symptoms,
       treatment: visit.treatment,
       nextAppointment: visit.nextAppointment,

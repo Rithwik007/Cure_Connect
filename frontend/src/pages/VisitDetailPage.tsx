@@ -67,7 +67,21 @@ const VisitDetailPage: React.FC = () => {
     if (!element) return;
 
     try {
-      const canvas = await html2canvas(element, { scale: 2 });
+      // Force a desktop-like width for high-quality capture on mobile
+      const captureWidth = 1024;
+      const originalStyle = element.style.width;
+      element.style.width = `${captureWidth}px`;
+
+      const canvas = await html2canvas(element, { 
+        scale: 2,
+        useCORS: true,
+        windowWidth: captureWidth,
+        width: captureWidth
+      });
+
+      // Restore original style
+      element.style.width = originalStyle;
+
       const imgData = canvas.toDataURL('image/png');
       const pdf = new jsPDF('p', 'mm', 'a4');
       const imgProps = pdf.getImageProperties(imgData);
@@ -134,18 +148,23 @@ const VisitDetailPage: React.FC = () => {
                     </div>
                   </div>
                 </div>
-                <div className="bg-white p-2 rounded-3 shadow-sm border text-center">
+                <div className="bg-white p-3 rounded-3 shadow-sm border text-center">
                   <QRCodeSVG 
                     value={`${window.location.origin}/verify-prescription/${visitId}`} 
-                    size={80} 
+                    size={140} 
                     level="H" 
                   />
-                  <div className="text-dark small fw-bold mt-1" style={{ fontSize: '0.6rem' }}>SCAN TO VERIFY</div>
+                  <div className="text-dark small fw-bold mt-2" style={{ fontSize: '0.75rem' }}>SCAN TO VERIFY</div>
                 </div>
               </div>
             </Card.Header>
             
             <Card.Body className="p-5">
+              <div className="mb-4 bg-light p-4 rounded-4 border-start border-primary border-4">
+                <div className="small text-muted fw-bold text-uppercase mb-1">Reason for Visit</div>
+                <h4 className="fw-bold text-dark mb-0">{visit.reason || 'Routine Consultation'}</h4>
+              </div>
+
               <div className="mb-5">
                 <h5 className="fw-bold mb-3 d-flex align-items-center gap-2 text-primary">
                   <Activity size={20} />

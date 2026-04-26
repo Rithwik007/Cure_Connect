@@ -14,6 +14,7 @@ const NewVisitPage: React.FC = () => {
     date: new Date().toISOString().split('T')[0],
     symptoms: '',
     diagnosis: '',
+    reason: '',
     treatment: '',
     notes: '',
     nextAppointment: '',
@@ -80,6 +81,19 @@ const NewVisitPage: React.FC = () => {
                         className="bg-light border-0 py-3 rounded-4 fw-medium"
                         value={formData.date}
                         onChange={(e) => setFormData({ ...formData, date: e.target.value })}
+                      />
+                    </Form.Group>
+                  </Col>
+                  <Col md={6}>
+                    <Form.Group>
+                      <Form.Label className="small fw-bold text-muted text-uppercase ls-wide mb-2">Reason for Visit</Form.Label>
+                      <Form.Control 
+                        type="text"
+                        required
+                        placeholder="e.g. Regular Checkup"
+                        className="bg-light border-0 py-3 rounded-4 fw-medium"
+                        value={formData.reason}
+                        onChange={(e) => setFormData({ ...formData, reason: e.target.value })}
                       />
                     </Form.Group>
                   </Col>
